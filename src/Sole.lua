@@ -29,4 +29,8 @@ function Sole:isDirty()
     return self.dirty
 end
 
+function Sole:getGridAt(index)
+    return self.grids[index]
+end
+
 return Sole

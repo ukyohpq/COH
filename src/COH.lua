@@ -5,6 +5,7 @@
 
 local COH = class("COH")
 
+
 function COH:ctor()
 
 end

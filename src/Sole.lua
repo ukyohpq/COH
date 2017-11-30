@@ -33,4 +33,7 @@ function Sole:getGridAt(index)
     return self.grids[index]
 end
 
+function Sole:getLen()
+    return #self.grids
+end
 return Sole

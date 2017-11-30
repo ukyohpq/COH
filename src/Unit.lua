@@ -4,17 +4,25 @@
 ---
 
 ---@class Unit
----@field id number
+---@field unitData UnitData
+---@field grids Grid
+---@field color number
 local Unit = class("Unit")
 
-function Unit:ctor(id)
-    self.size = {1,1}
+---ctor
+---@param unitData UnitData
+function Unit:ctor(unitData, color)
+    self.unitData = unitData
     self.grids = {}
-    self.id = id
+    self.color = color
 end
 
 function Unit:tostring()
-    return tostring(self.id)
+    return tostring(self.unitData.id)
+end
+
+function Unit:getSize()
+    return self.unitData.width, self.unitData.height
 end
 
 return Unit

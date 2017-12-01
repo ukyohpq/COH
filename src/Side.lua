@@ -3,61 +3,27 @@
 --- DateTime: 17/11/28 17:43
 ---
 
-local width = 8
-local hight = 6
-
-local Sole = require("Sole")
 ---@class Side
----@field rows Sole[]
----@field lines Sole[]
+---@field map Map
+---@field units table<Unit, boolean>
+---@field holdingUnit Unit
+---@field holdingLine number
+---@field point number
 local Side = class("Side")
 
 function Side:ctor()
-    self.rows = {}
-    self.lines = {}
-    for i = 1, width do
-        local line = self.lines[i]
-        if line == nil then
-            line = Sole.new()
-            self.lines[i] = line
-        end
-        for j = 1, hight do
-            local row = self.rows[j]
-            if row == nil then
-                row = Sole.new()
-                self.rows[j] = row
-            end
-            local grid = require("Grid").new(i, j)
-            row:addGrid(grid)
-            line:addGrid(grid)
-            local leftLine = self.lines[i - 1]
-            local upRow = self.rows[j - 1]
-            if leftLine ~= nil then
-                local leftGrid = leftLine:getGridAt(j)
-                leftGrid.right = grid
-                grid.left = leftGrid
-            end
-            if upRow ~= nil then
-                local upGrid = upRow:getGridAt(i)
-                upGrid.down = grid
-                grid.up = upGrid
-            end
-        end
-    end
+    self.map = require("Map").new(8, 6)
+    self.units = {}
+    self.point = 3
 end
 
 function Side:output()
-    local s = ""
-    local lastRow = 1
-    for i, row in ipairs(self.rows) do
-        if i > lastRow then
-            s = s .. "\n"
-            lastRow = i
-        end
-        for j = 1, width do
-            local grid = row:getGridAt(j)
-            s = s .. grid:tostring()
-        end
+    local mapRet = self.map:output()
+    local s = mapRet .. "\n"
+    if self.holdingUnit == nil then
+        s = s .. "holdingUnit:" .. " nil " .. "holdingLine:" .. " nil"
+    else
+        s = s .. "holdingUnit:" .. self.holdingUnit:tostring() .. " holdingLine:" .. self.holdingLine
     end
     return s
 end
@@ -68,11 +34,19 @@ end
 ---@param line number
 ---@return boolean
 function Side:tryAddUnitAt(unit, line)
-    local line = self.lines[line]
+    if self.units[unit] == true then
+        return false
+    end
+    local map = self.map
+    local line = map.lines[line]
+    if line == nil then
+        return false
+    end
     for i = 1, line:getLen() do
         local grid = line:getGridAt(i)
         if grid:getUnit() == nil then
-            if self:tryAddUnitInGrid(unit, grid) then
+            if map:tryAddUnitInGrid(unit, grid) then
+                self.units[unit] = true
                 return true
             end
         end
@@ -80,60 +54,45 @@ function Side:tryAddUnitAt(unit, line)
     return false
 end
 
----tryAddUnitInGrid
----@param unit Unit
----@param grid Grid
----@return boolean
-function Side:tryAddUnitInGrid(unit, grid)
-    local w, h = unit:getSize()
-    local startRow = grid.row
-    local startLine = grid.line
-    ---@type Grid[]
-    local grids = {}
-    for i = startLine, w do
-        for j = startRow, h do
-            local grid = self:getGridByRowAndLine(i, j)
-            --没格子了，超出了地图
-            if grid == nil then
-                return false
-            end
-            --格子中有东西
-            if grid:getUnit() ~= nil then
-                return false
-            end
-            print(2)
-            table.insert(grids, grid)
+function Side:holdUnitAt(line)
+    if self.holdingUnit ~= nil then
+        return false
+    end
+    local map = self.map
+    local lineSole = map.lines[line]
+    if lineSole == nil then
+        return false
+    end
+    for i = 1, lineSole:getLen() do
+        local grid = lineSole:getGridAt(i)
+        local unit = grid:getUnit()
+        if unit ~= nil then
+            map:removeUnit(unit)
+            self.units[unit] = nil
+            self.holdingUnit = unit
+            self.holdingLine = line
+            return true
         end
     end
-    for _, grid in ipairs(grids) do
-        print("asfsdaf")
-        grid:setUnit(unit)
+    return false
+end
+
+function Side:putHoldingUnitAt(line)
+    if self.holdingUnit == nil then
+        return
     end
-    return true
-end
-
----getRightGrid
----@param grid Grid
-function Side:getRightGrid(grid)
-    return self.rows[grid.row]:getGridAt(grid.line + 1)
-end
-
----getDownGrid
----@param grid Grid
-function Side:getDownGrid(grid)
-    return self.lines[grid.line]:getGridAt(grid.row + 1)
-end
-
----getGridByRowAndLine
----@param row number
----@param line number
----@return Grid
-function Side:getGridByRowAndLine(line, row)
-    local row = self.rows[row]
-    if row == nil then
-        return nil
+    if self:tryAddUnitAt(self.holdingUnit, line) then
+        self.holdingUnit = nil
+        if self.holdingLine ~= line then
+            self.point = self.point - 1
+            self:checkMoveResult()
+        end
+        self.holdingLine = nil
     end
-    return row:getGridAt(line)
+end
+
+function Side:checkMoveResult()
+    logErr("Side:checkMoveResult")
 end
 
 return Side

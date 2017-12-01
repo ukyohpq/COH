@@ -42,8 +42,22 @@ function Side:tryAddUnitAt(unit, line)
     if line == nil then
         return false
     end
-    for i = 1, line:getLen() do
+    local firstEmptyGridIndex = 1
+    local lineLen = line:getLen()
+    for i = lineLen, 1, -1 do
+        if line:getGridAt(i):getUnit() ~= nil then
+            firstEmptyGridIndex = i + 1
+            break
+        end
+    end
+    if firstEmptyGridIndex > lineLen then
+        return false
+    end
+    for i = firstEmptyGridIndex, lineLen do
         local grid = line:getGridAt(i)
+        if grid == nil then
+            print(firstEmptyGridIndex, lineLen, i)
+        end
         if grid:getUnit() == nil then
             if map:tryAddUnitInGrid(unit, grid) then
                 self.units[unit] = true
@@ -94,5 +108,6 @@ end
 function Side:checkMoveResult()
     logErr("Side:checkMoveResult")
 end
+
 
 return Side

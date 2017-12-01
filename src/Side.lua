@@ -3,18 +3,23 @@
 --- DateTime: 17/11/28 17:43
 ---
 
+local Map = require("Map")
+local UserData = require("UserData")
+
 ---@class Side
 ---@field map Map
 ---@field units table<Unit, boolean>
 ---@field holdingUnit Unit
 ---@field holdingLine number
 ---@field point number
+---@field userData UserData
 local Side = class("Side")
 
 function Side:ctor()
-    self.map = require("Map").new(8, 6)
+    self.map = Map.new(8, 6)
     self.units = {}
     self.point = 3
+    self.userData = UserData.new()
 end
 
 function Side:output()
@@ -109,5 +114,8 @@ function Side:checkMoveResult()
     logErr("Side:checkMoveResult")
 end
 
+function Side:summon()
+    local leadership = self.userData.leadership
+end
 
 return Side

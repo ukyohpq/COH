@@ -116,6 +116,7 @@ end
 
 function Side:summon()
     local leadership = self.userData.leadership
+
 end
 
 return Side

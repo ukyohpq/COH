@@ -1,0 +1,14 @@
+---
+--- Created by ukyohpq.
+--- DateTime: 17/11/30 11:10
+---
+
+---@class unit.UnitData
+---@field id number
+---@field type number
+---@field width number
+---@field height number
+---@field hp number
+---@field attack number
+---@field launchTime number
+---@field hpIncrease number

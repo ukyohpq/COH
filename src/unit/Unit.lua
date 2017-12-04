@@ -3,18 +3,16 @@
 --- DateTime: 17/11/28 17:45
 ---
 
----@class Unit
----@field unitData UnitData
+---@class unit.Unit
+---@field unitData unit.UnitData
 ---@field grids Grid
----@field color number
-local Unit = class("Unit")
+local Unit = class("unit.Unit")
 
 ---ctor
----@param unitData UnitData
-function Unit:ctor(unitData, color)
+---@param unitData unit.UnitData
+function Unit:ctor(unitData)
     self.unitData = unitData
     self.grids = {}
-    self.color = color
 end
 
 function Unit:tostring()

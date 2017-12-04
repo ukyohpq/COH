@@ -7,7 +7,7 @@ package.path = package.path .. ";../../../usefulLib/lua/?.lua"
 
 require("Utils.Logger")
 require("class")
-local UnitFactory = require("UnitFactory")
+local UnitFactory = require("unit.UnitFactory")
 local Side = require("Side")
 
 local selfSide = Side.new()
@@ -29,4 +29,3 @@ logErr(selfSide:tryAddUnitAt(unit3, 3))
 logErr(selfSide:tryAddUnitAt(unit4, 3))
 logErr(selfSide:tryAddUnitAt(unit5, 4))
 logErr(selfSide:output())
-

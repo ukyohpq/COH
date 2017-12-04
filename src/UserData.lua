@@ -14,4 +14,4 @@ UserData.level = 1
 UserData.hp = 30
 UserData.mp = 0
 UserData.leadership = 30
-return
+return UserData

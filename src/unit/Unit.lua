@@ -3,10 +3,10 @@
 --- DateTime: 17/11/28 17:45
 ---
 
----@class unit.Unit
+---@class unit.Unit:unit.UnitComponent
 ---@field unitData unit.UnitData
 ---@field grids Grid
-local Unit = class("unit.Unit")
+local Unit = class("unit.Unit", require("unit.UnitComponent"))
 
 ---ctor
 ---@param unitData unit.UnitData

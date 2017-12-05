@@ -3,18 +3,21 @@
 --- DateTime: 17/11/28 17:50
 ---
 
----@class unit.HPUnit @普通单位
-local HPUnit = class("unit.HPUnit", require("unit.Unit"))
----@type unit.Unit
+---@class unit.HPUnit:unit.UnitDecorator
+local HPUnit = class("unit.HPUnit", require("unit.UnitDecorator"))
+---@type unit.UnitDecorator
 local super = HPUnit.super
----ctor
----@param unitData unit.UnitData
----@param color number
-function HPUnit:ctor(unitData, color)
-    super.ctor(self, unitData, color)
+
+function HPUnit:ctor(component)
+    super.ctor(self, component)
 end
 
-function HPUnit:form()
-
+function HPUnit:setHp(value)
+    self.value = value
 end
+
+function HPUnit:getHp()
+    return self.value
+end
+
 return HPUnit

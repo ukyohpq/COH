@@ -4,16 +4,15 @@
 --- DateTime: 17/12/4 10:41
 ---
 
----@class unit.ColorUnit
----@field color number
-local ColorUnit = class("unit.ColorUnit", require("unit.Unit"))
----@type unit.Unit
-local super = ColorUnit.super
----ctor
----@param unitData unit.UnitData
----@param color number
-function ColorUnit:ctor(unitData, color)
-    super.ctor(unitData)
+---@class unit.ColorUnit:unit.UnitDecorator
+local ColorUnit = class("unit.ColorUnit", require("unit.UnitDecorator"))
+---@type unit.UnitDecorator
+local super= ColorUnit.super
+function ColorUnit:ctor(component)
+    super.ctor(self.component)
+end
+
+function ColorUnit:setColor(color)
     self.color = color
 end
 

@@ -8,11 +8,23 @@
 local OperationComponent = class("operation.OperationComponent")
 
 function OperationComponent:canHold()
-    return nil
+    return false
 end
 
 function OperationComponent:getComponent()
     return nil
+end
+
+function OperationColor:setColor(value)
+    self.color = value
+end
+
+function OperationColor:getColor()
+    return self.color
+end
+
+function OperationColor:hasColor()
+    return true
 end
 
 return OperationComponent

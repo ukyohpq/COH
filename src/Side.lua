@@ -116,7 +116,13 @@ end
 
 function Side:summon()
     local leadership = self.userData.leadership
-
+    for i = 1, leadership do
+        local unit1 = UnitFactory:createUnitByTemplateId(101)
+        local unit2 = UnitFactory:createUnitByTemplateId(101)
+        local unit3 = UnitFactory:createUnitByTemplateId(102)
+        local unit4 = UnitFactory:createUnitByTemplateId(103)
+        local unit5 = UnitFactory:createUnitByTemplateId(101)
+    end
 end
 
 return Side

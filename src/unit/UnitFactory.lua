@@ -20,7 +20,7 @@ local UnitFactory = class("unit.UnitFactory")
 ---createUnit
 ---@param templateId number
 ---@param color number
-function UnitFactory:createUnitByTemplateId(templateId, color)
+function UnitFactory:createUnitByTemplateId(templateId)
     local unitData = UnitDatas[templateId]
     local unit = require("unit.Unit").new(unitData)
     --if unitData.type == 1 then

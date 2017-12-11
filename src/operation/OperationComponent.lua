@@ -15,15 +15,15 @@ function OperationComponent:getComponent()
     return nil
 end
 
-function OperationColor:setColor(value)
+function OperationComponent:setColor(value)
     self.color = value
 end
 
-function OperationColor:getColor()
+function OperationComponent:getColor()
     return self.color
 end
 
-function OperationColor:hasColor()
+function OperationComponent:hasColor()
     return true
 end
 

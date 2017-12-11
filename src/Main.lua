@@ -5,7 +5,7 @@
 package.path = package.path .. ";../../../../usefulLib/lua/?.lua"
 package.path = package.path .. ";../../../usefulLib/lua/?.lua"
 
---require("Utils.Logger")
+require("Utils.Logger")
 require("class")
 local UnitFactory = require("unit.UnitFactory")
 local Side = require("Side")

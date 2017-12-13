@@ -8,6 +8,7 @@ package.path = package.path .. ";../../../usefulLib/lua/?.lua"
 require("Utils.Logger")
 require("class")
 require("COHConst")
+require("unit.UnitData")
 
 local UnitFactory = require("unit.UnitFactory")
 local Side = require("Side")

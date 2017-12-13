@@ -7,24 +7,27 @@
 ---@class operation.OperationComponent
 local OperationComponent = class("operation.OperationComponent")
 
-function OperationComponent:canHold()
-    return false
-end
+---@return operation.OperationComponent
+function OperationComponent:getComponent() return nil end
 
-function OperationComponent:getComponent()
-    return nil
-end
+---canHold
+---@param unit unit.Unit
+function OperationComponent:canHold(unit) return false end
 
-function OperationComponent:setColor(value)
-    self.color = value
-end
+---canAssistTrans
+---@param unit unit.Unit
+function OperationComponent:canAssistTrans(unit) return false end
 
-function OperationComponent:getColor()
-    return self.color
-end
+---canTransAttack
+---@param unit unit.Unit
+function OperationComponent:canTransAttack(unit) return false end
 
-function OperationComponent:hasColor()
-    return true
-end
+---canTransDefence
+---@param unit unit.Unit
+function OperationComponent:canTransDefence(unit) return false end
+
+---canDelete
+---@param unit unit.UnitData
+function OperationComponent:canDelete(unit) return false end
 
 return OperationComponent

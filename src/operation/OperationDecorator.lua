@@ -16,10 +16,6 @@ function OperationDecorator:decorate(component)
     self.component = component
 end
 
-function OperationDecorator:canHold()
-    return nil
-end
-
 function OperationDecorator:getComponent()
     return self.component
 end

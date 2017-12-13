@@ -4,7 +4,6 @@
 ---
 
 local Map = require("Map")
-local UserData = require("UserData")
 
 ---@class Side
 ---@field map Map
@@ -12,6 +11,7 @@ local UserData = require("UserData")
 ---@field holdingUnit Unit
 ---@field holdingLine number
 ---@field userData UserData
+---@field operator operation.OperationComponent
 local Side = class("Side")
 
 ---ctor
@@ -20,6 +20,11 @@ function Side:ctor(userData)
     self.map = Map.new(COHConst.MAX_LINE, COHConst.MAX_ROW)
     self.units = {}
     self.userData = userData
+    self:initOperator()
+end
+
+function Side:initOperator()
+    self.operator = require("operation.OperationNormal").new()
 end
 
 function Side:output()
@@ -134,18 +139,54 @@ function Side:putHoldingUnitAt(line)
     if self.holdingUnit == nil then
         return
     end
-    if self:tryAddUnitAt(self.holdingUnit, line) then
+    local movedUnit = self.holdingUnit
+    if self:tryAddUnitAt(movedUnit, line) then
         self.holdingUnit = nil
         if self.holdingLine ~= line then
             self.userData.point = self.userData.point - 1
-            self:checkMoveResult()
+            self:checkMoveResult(movedUnit)
         end
         self.holdingLine = nil
     end
 end
 
-function Side:checkMoveResult()
-    logErr("Side:checkMoveResult")
+---checkMoveResult
+---@param movedUint unit.Unit
+function Side:checkMoveResult(movedUint)
+    local canTransAttack= self:canTransAttack(movedUint)
+    local canUseToTransAttack = self:canUseToTransAttack(movedUint)
+    if canTransAttack == false and canUseToTransAttack == false then
+        return
+    end
+    local grid = movedUint.grids[1]
+    local state = "normal"
+    local line = self.map.lines[grid.line]
+    local row = self.map.rows[grid.row]
+    while true do
+        if state == "normal" then
+
+        elseif state == "checkLine" then
+            for i = grid.row - 1, 1, -1 do
+                --if
+            end
+        elseif state == "checkRow" then
+
+        elseif state == "checkMerge" then
+
+        end
+    end
+end
+
+---canTransAttack
+---@param unit unit.Unit
+function Side:canTransAttack(unit)
+    return false
+end
+
+---canUseToTransAttack
+---@param unit unit.Unit
+function Side:canUseToTransAttack(unit)
+    return false
 end
 
 function Side:summon()

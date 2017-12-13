@@ -11,15 +11,15 @@ local UserData = require("UserData")
 ---@field units table<Unit, boolean>
 ---@field holdingUnit Unit
 ---@field holdingLine number
----@field point number
 ---@field userData UserData
 local Side = class("Side")
 
-function Side:ctor()
-    self.map = Map.new(8, 6)
+---ctor
+---@param userData UserData
+function Side:ctor(userData)
+    self.map = Map.new(COHConst.MAX_LINE, COHConst.MAX_ROW)
     self.units = {}
-    self.point = 3
-    self.userData = UserData.new()
+    self.userData = userData
 end
 
 function Side:output()
@@ -82,10 +82,10 @@ function Side:holdUnitAt(line)
     if lineSole == nil then
         return false
     end
-    for i = 1, lineSole:getLen() do
+    for i = lineSole:getLen(), 1, -1 do
         local grid = lineSole:getGridAt(i)
         local unit = grid:getUnit()
-        if unit ~= nil then
+        if self:canHoldUnit(unit) then
             map:removeUnit(unit)
             self.units[unit] = nil
             self.holdingUnit = unit
@@ -96,6 +96,40 @@ function Side:holdUnitAt(line)
     return false
 end
 
+---canHoldUnit
+---@param unit unit.Unit
+function Side:canHoldUnit(unit)
+    if unit == nil then return nil end
+    local grids = unit.grids
+    --取出unit占据的格子中，各列最底部的格子
+    ---@type Grid[]
+    local lineBottomGrids = {}
+    for _, grid in ipairs(grids) do
+        local l = grid.line
+        if lineBottomGrids[l] == nil then
+            lineBottomGrids[l] = grid
+        else
+            if lineBottomGrids[l].row < grid.row then
+                lineBottomGrids[l] = grid
+            end
+        end
+    end
+    --检测这些最底部的格子的下面，是否有遮挡
+    for _, grid in ipairs(lineBottomGrids) do
+        local l = grid.line
+        local lineSole = self.map.lines[l]
+        for i = grid.row + 1, COHConst.MAX_ROW do
+            local bGrid = lineSole.getGridAt(i)
+            --如果下面的格子有unit，即是说有遮挡，则不可以拿起
+            if bGrid:getUnit() ~= nil then
+                return false
+            end
+        end
+    end
+    --所有的最底部的格子没有遮挡，则可以拿起
+    return true
+end
+
 function Side:putHoldingUnitAt(line)
     if self.holdingUnit == nil then
         return
@@ -103,7 +137,7 @@ function Side:putHoldingUnitAt(line)
     if self:tryAddUnitAt(self.holdingUnit, line) then
         self.holdingUnit = nil
         if self.holdingLine ~= line then
-            self.point = self.point - 1
+            self.userData.point = self.userData.point - 1
             self:checkMoveResult()
         end
         self.holdingLine = nil
@@ -116,12 +150,10 @@ end
 
 function Side:summon()
     local leadership = self.userData.leadership
+    local UnitFactory = require("unit.UnitFactory")
     for i = 1, leadership do
-        local unit1 = UnitFactory:createUnitByTemplateId(101)
-        local unit2 = UnitFactory:createUnitByTemplateId(101)
-        local unit3 = UnitFactory:createUnitByTemplateId(102)
-        local unit4 = UnitFactory:createUnitByTemplateId(103)
-        local unit5 = UnitFactory:createUnitByTemplateId(101)
+        local unit = UnitFactory:createUnitByTemplateId(101, (i - 1) % 3 + 1)
+        self:tryAddUnitAt(unit, (i - 1) % 8 + 1)
     end
 end
 

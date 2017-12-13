@@ -5,33 +5,33 @@
 
 ---@class unit.Unit:unit.UnitComponent
 ---@field unitData unit.UnitData
----@field grids Grid
----@field operator operation.OperationComponent
+---@field grids Grid[]
+---@field color number
 local Unit = class("unit.Unit")
 
 ---ctor
 ---@param unitData unit.UnitData
-function Unit:ctor(unitData)
+---@param color number
+function Unit:ctor(unitData, color)
     self.unitData = unitData
     self.grids = {}
-    self.operator = require("operation.OperationComponent").new()
-    self:createOperator()
+    self.color = color
 end
 
 function Unit:tostring()
-    return tostring(self.unitData.id)
+    local s = "tid:" .. self.unitData.id
+    if self.color ~= nil then
+        s = s .. " color:" .. self.color
+    end
+    return s
 end
 
 function Unit:getSize()
     return self.unitData.width, self.unitData.height
 end
 
-function Unit:createOperator()
-    local dataType = self.unitData.type
-    if dataType == 1 then
-    elseif dataType == 2 then
-    elseif dataType == 3 then
-    elseif dataType == 4 then
-    end
+function Unit:getColor()
+    return self.color
 end
+
 return Unit

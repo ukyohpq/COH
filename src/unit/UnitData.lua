@@ -22,4 +22,9 @@ local UnitDatas = {
     [202] = {id = 202, type = 4, width = 1, height = 2, hp = 4, attack = -1, launchTime = -1, hpIncrease = 2},
     [203] = {id = 203, type = 4, width = 2, height = 2, hp = 8, attack = -1, launchTime = -1, hpIncrease = 4},
 }
+
+local operations = {
+    [1] = {id = 1, hold = 1, color = 1, delete = 1, merge = 1, hp = 1, attck = 1}
+}
+
 return UnitDatas

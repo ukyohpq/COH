@@ -4,7 +4,7 @@
 ---
 
 ---@class Grid:Event.EventDispatcher
----@field unit Unit
+---@field unit unit.Unit
 ---@field row number
 ---@field line number
 ---@field left Grid
@@ -26,6 +26,8 @@ function Grid:getUnit()
     return self.unit
 end
 
+---setUnit
+---@param unit unit.Unit
 function Grid:setUnit(unit)
     self.unit = unit
     self:dispatchEvent(Grid.CHANGE)

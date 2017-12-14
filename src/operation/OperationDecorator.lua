@@ -20,4 +20,46 @@ function OperationDecorator:getComponent()
     return self.component
 end
 
+---canHold
+---@param unit unit.Unit
+function OperationDecorator:canHold(unit)
+    return self:checkHoldType(unit) and self:checkHoldWay(unit)
+end
+
+---checkHoldType
+---@param unit unit.Unit
+function OperationDecorator:checkHoldType(unit)
+    return self.component:checkHoldType(unit)
+end
+
+---checkHoldWay
+---@param unit unit.Unit
+function OperationDecorator:checkHoldWay(unit)
+    return self.component:checkHoldWay(unit)
+end
+
+---canAssistTrans
+---@param unit unit.Unit
+function OperationDecorator:canAssistTrans(unit)
+    return self.component:canAssistTrans(unit)
+end
+
+---canTransAttack
+---@param unit unit.Unit
+function OperationDecorator:canTransAttack(unit)
+    return self.component:canTransAttack(unit)
+end
+
+---canTransDefence
+---@param unit unit.Unit
+function OperationDecorator:canTransDefence(unit)
+    return self.component:canTransDefence(unit)
+end
+
+---canDelete
+---@param unit unit.UnitData
+function OperationDecorator:canDelete(unit)
+    return self.component:canDelete(unit)
+end
+
 return OperationDecorator

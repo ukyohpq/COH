@@ -10,6 +10,7 @@
 ---@field leadership number
 ---@field lineup number[]
 ---@field point number[]
+---@field equip number[]
 local UserData = class("UserData")
 UserData.level = 1
 UserData.hp = 30

@@ -3,11 +3,11 @@
 --- DateTime: 17/11/28 17:45
 ---
 
----@class unit.Unit:unit.UnitComponent
+---@class unit.Unit:Event.EventDispatcher
 ---@field unitData unit.UnitData
 ---@field grids Grid[]
 ---@field color number
-local Unit = class("unit.Unit")
+local Unit = class("unit.Unit", require("Event.EventDispatcher"))
 
 ---ctor
 ---@param unitData unit.UnitData

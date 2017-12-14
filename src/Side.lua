@@ -90,7 +90,7 @@ function Side:holdUnitAt(line)
     for i = lineSole:getLen(), 1, -1 do
         local grid = lineSole:getGridAt(i)
         local unit = grid:getUnit()
-        if self:canHoldUnit(unit) then
+        if unit ~= nil and self.operator:canHold(unit) then
             map:removeUnit(unit)
             self.units[unit] = nil
             self.holdingUnit = unit
@@ -99,40 +99,6 @@ function Side:holdUnitAt(line)
         end
     end
     return false
-end
-
----canHoldUnit
----@param unit unit.Unit
-function Side:canHoldUnit(unit)
-    if unit == nil then return nil end
-    local grids = unit.grids
-    --取出unit占据的格子中，各列最底部的格子
-    ---@type Grid[]
-    local lineBottomGrids = {}
-    for _, grid in ipairs(grids) do
-        local l = grid.line
-        if lineBottomGrids[l] == nil then
-            lineBottomGrids[l] = grid
-        else
-            if lineBottomGrids[l].row < grid.row then
-                lineBottomGrids[l] = grid
-            end
-        end
-    end
-    --检测这些最底部的格子的下面，是否有遮挡
-    for _, grid in ipairs(lineBottomGrids) do
-        local l = grid.line
-        local lineSole = self.map.lines[l]
-        for i = grid.row + 1, COHConst.MAX_ROW do
-            local bGrid = lineSole.getGridAt(i)
-            --如果下面的格子有unit，即是说有遮挡，则不可以拿起
-            if bGrid:getUnit() ~= nil then
-                return false
-            end
-        end
-    end
-    --所有的最底部的格子没有遮挡，则可以拿起
-    return true
 end
 
 function Side:putHoldingUnitAt(line)

@@ -7,12 +7,17 @@
 ---@class operation.OperationComponent
 local OperationComponent = class("operation.OperationComponent")
 
----@return operation.OperationComponent
-function OperationComponent:getComponent() return nil end
-
 ---canHold
 ---@param unit unit.Unit
 function OperationComponent:canHold(unit) return false end
+
+---checkHoldType
+---@param unit unit.Unit
+function OperationComponent:checkHoldType(unit) return false end
+
+---checkHoldWay
+---@param unit unit.Unit
+function OperationComponent:checkHoldWay(unit) return false end
 
 ---canAssistTrans
 ---@param unit unit.Unit

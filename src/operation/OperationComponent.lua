@@ -5,8 +5,14 @@
 ---
 
 ---@class operation.OperationComponent
+---@field side Side
 local OperationComponent = class("operation.OperationComponent")
 
+---ctor
+---@param side Side
+function OperationComponent:ctor(side)
+    self.side = side
+end
 ---canHold
 ---@param unit unit.Unit
 function OperationComponent:canHold(unit) return false end

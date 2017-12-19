@@ -39,9 +39,9 @@ function OperationNormal:checkHoldWay(unit)
     --检测这些最底部的格子的下面，是否有遮挡
     for _, grid in ipairs(lineBottomGrids) do
         local l = grid.line
-        local lineSole = self.map.lines[l]
+        local lineSole = self.side.map.lines[l]
         for i = grid.row + 1, COHConst.MAX_ROW do
-            local bGrid = lineSole.getGridAt(i)
+            local bGrid = lineSole:getGridAt(i)
             --如果下面的格子有unit，即是说有遮挡，则不可以拿起
             if bGrid:getUnit() ~= nil then
                 return false

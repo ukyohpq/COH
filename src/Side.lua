@@ -3,6 +3,14 @@
 --- DateTime: 17/11/28 17:43
 ---
 
+local MoveState = {
+    NORMAL = 1,
+    CHECK_LINE = 2,
+    CHECK_ROW = 3,
+    CHECK_MERGE = 4,
+    SWAP = 5,
+}
+
 local Map = require("Map")
 
 ---@class Side
@@ -24,7 +32,7 @@ function Side:ctor(userData)
 end
 
 function Side:initOperator()
-    self.operator = require("operation.OperationNormal").new()
+    self.operator = require("operation.OperationNormal").new(self)
 end
 
 function Side:output()
@@ -40,7 +48,7 @@ end
 
 
 ---addUnit
----@param unit Unit
+---@param unit unit.Unit
 ---@param line number
 ---@return boolean
 function Side:tryAddUnitAt(unit, line)
@@ -116,37 +124,42 @@ function Side:putHoldingUnitAt(line)
     end
 end
 
-local MoveState = {
-    NORMAL = 1,
-    CHECK_LINE = 2,
-    CHECK_ROW = 3,
-    CHECK_MERGE = 4,
-    SWAP = 5,
-}
 ---checkMoveResult
 ---@param movedUint unit.Unit
 function Side:checkMoveResult(movedUint)
-    local grid = movedUint.grids[1]
+    ---@type Grid
+    local dirtyGrid
+    ---@type Sole
+    local line
+    ---@type Sole
+    local row
     local state = MoveState.NORMAL
-    local line = self.map.lines[grid.line]
-    local row = self.map.rows[grid.row]
+    ---@type Grid[]
+    local dirtyGrids = {movedUint.grids[1]}
     while true do
         if state == MoveState.NORMAL then
-            if self.operator:canAssistTrans(movedUint) then
+            if #dirtyGrids == 0 then
+                break
+            end
+            dirtyGrid = table.remove(dirtyGrids, 1)
+            line = self.map.lines[dirtyGrid.line]
+            row = self.map.rows[dirtyGrid.row]
+            if self.operator:canAssistTrans(dirtyGrid:getUnit()) then
                 state = MoveState.CHECK_LINE
-            elseif self.operator:canAssistDefence(movedUint) then
+            elseif self.operator:canAssistDefence(dirtyGrid:getUnit()) then
                 state = MoveState.CHECK_ROW
             end
         elseif state == MoveState.CHECK_LINE then
-            for i = grid.row - 1, 1, -1 do
+            for i = dirtyGrid.row - 1, 1, -1 do
                 --if
             end
+            state = MoveState.CHECK_ROW
         elseif state == MoveState.CHECK_ROW then
-
+            state = MoveState.CHECK_MERGE
         elseif state == MoveState.CHECK_MERGE then
-
+            state = MoveState.SWAP
         elseif state == MoveState.SWAP then
-
+            state = MoveState.NORMAL
         end
     end
 end

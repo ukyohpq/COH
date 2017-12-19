@@ -10,7 +10,6 @@ local Sole = require("Sole")
 ---@field lines Sole[]
 ---@field width number
 ---@field height number
----@field unitMap table<Unit, Grid[]>
 local Map = class("Map")
 
 function Map:ctor(width, height)
@@ -18,7 +17,6 @@ function Map:ctor(width, height)
     self.height = height
     self.rows = {}
     self.lines = {}
-    self.unitMap = {}
     for i = 1, width do
         local line = self.lines[i]
         if line == nil then
@@ -75,7 +73,7 @@ function Map:tryAddUnitInGrid(unit, grid)
             table.insert(grids, grid)
         end
     end
-    self.unitMap[unit] = grids
+    unit.grids = grids
     for _, grid in ipairs(grids) do
         grid:setUnit(unit)
     end
@@ -83,7 +81,7 @@ function Map:tryAddUnitInGrid(unit, grid)
 end
 
 function Map:removeUnit(unit)
-    local grids = self.unitMap[unit]
+    local grids = unit.grids
     if grids == nil then
         return
     end

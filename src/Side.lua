@@ -116,43 +116,39 @@ function Side:putHoldingUnitAt(line)
     end
 end
 
+local MoveState = {
+    NORMAL = 1,
+    CHECK_LINE = 2,
+    CHECK_ROW = 3,
+    CHECK_MERGE = 4,
+    SWAP = 5,
+}
 ---checkMoveResult
 ---@param movedUint unit.Unit
 function Side:checkMoveResult(movedUint)
-    local canTransAttack= self:canTransAttack(movedUint)
-    local canUseToTransAttack = self:canUseToTransAttack(movedUint)
-    if canTransAttack == false and canUseToTransAttack == false then
-        return
-    end
     local grid = movedUint.grids[1]
-    local state = "normal"
+    local state = MoveState.NORMAL
     local line = self.map.lines[grid.line]
     local row = self.map.rows[grid.row]
     while true do
-        if state == "normal" then
-
-        elseif state == "checkLine" then
+        if state == MoveState.NORMAL then
+            if self.operator:canAssistTrans(movedUint) then
+                state = MoveState.CHECK_LINE
+            elseif self.operator:canAssistDefence(movedUint) then
+                state = MoveState.CHECK_ROW
+            end
+        elseif state == MoveState.CHECK_LINE then
             for i = grid.row - 1, 1, -1 do
                 --if
             end
-        elseif state == "checkRow" then
+        elseif state == MoveState.CHECK_ROW then
 
-        elseif state == "checkMerge" then
+        elseif state == MoveState.CHECK_MERGE then
+
+        elseif state == MoveState.SWAP then
 
         end
     end
-end
-
----canTransAttack
----@param unit unit.Unit
-function Side:canTransAttack(unit)
-    return false
-end
-
----canUseToTransAttack
----@param unit unit.Unit
-function Side:canUseToTransAttack(unit)
-    return false
 end
 
 function Side:summon()

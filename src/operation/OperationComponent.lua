@@ -35,4 +35,8 @@ function OperationComponent:canTransDefence(unit) return false end
 ---@param unit unit.UnitData
 function OperationComponent:canDelete(unit) return false end
 
+---canMerge
+---@param unit unit.Unit
+function OperationComponent:canMerge(unit) return false end
+
 return OperationComponent

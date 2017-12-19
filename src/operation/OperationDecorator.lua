@@ -62,4 +62,10 @@ function OperationDecorator:canDelete(unit)
     return self.component:canDelete(unit)
 end
 
+---canMerge
+---@param unit unit.Unit
+function OperationDecorator:canMerge(unit)
+    return self.component:canMerge(unit)
+end
+
 return OperationDecorator

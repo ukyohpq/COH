@@ -69,10 +69,21 @@ function OperationNormal:canTransDefence(unit)
     return TypeOperations[unit.unitData.type].transDefence == 1
 end
 
+---canAssistDefence
+---@param unit unit.Unit
+function OperationNormal:canAssistDefence(unit)
+    return TypeOperations[unit.unitData.type].assistDefence == 1
+end
 ---canDelete
 ---@param unit unit.Unit
 function OperationNormal:canDelete(unit)
     return TypeOperations[unit.unitData.type].delete == 1
+end
+
+---canMerge
+---@param unit unit.Unit
+function OperationNormal:canMerge(unit)
+    return TypeOperations[unit.unitData.type].merge == 1
 end
 
 return OperationNormal

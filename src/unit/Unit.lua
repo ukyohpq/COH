@@ -30,6 +30,18 @@ function Unit:getSize()
     return self.unitData.width, self.unitData.height
 end
 
+function Unit:getAssistSize()
+    local unitType = self.unitData.type
+    if unitType == 1 then
+        return 1, 2
+    elseif unitType == 2 then
+        return 1, 2
+    elseif unitType == 3 then
+        return 2, 2
+    end
+    return -1, -1
+end
+
 function Unit:getColor()
     return self.color
 end

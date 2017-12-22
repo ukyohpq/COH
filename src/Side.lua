@@ -136,22 +136,40 @@ function Side:checkMoveResult(movedUint)
     local state = MoveState.NORMAL
     ---@type Grid[]
     local dirtyGrids = {movedUint.grids[1]}
+    ---@type table<unit.Unit, boolean>
+    local attackCheckedUnit
     while true do
         if state == MoveState.NORMAL then
             if #dirtyGrids == 0 then
                 break
             end
-            dirtyGrid = table.remove(dirtyGrids, 1)
-            line = self.map.lines[dirtyGrid.line]
-            row = self.map.rows[dirtyGrid.row]
-            if self.operator:canAssistTrans(dirtyGrid:getUnit()) then
-                state = MoveState.CHECK_LINE
-            elseif self.operator:canAssistDefence(dirtyGrid:getUnit()) then
-                state = MoveState.CHECK_ROW
-            end
+            attackCheckedUnit = {}
+            state = MoveState.CHECK_LINE
         elseif state == MoveState.CHECK_LINE then
-            for i = dirtyGrid.row - 1, 1, -1 do
-                --if
+            for _, dirtyGrid in ipairs(dirtyGrids) do
+                local line = dirtyGrid.line
+                local row = dirtyGrid.row
+                local lineSole = self.map.lines[line]
+                --local rowSole = self.map.rows[row]
+                for i = 1, dirtyGrid.row - 1 do
+                    local grid = lineSole:getGridAt(i)
+                    local unit = grid:getUnit()
+                    if attackCheckedUnit[unit] ~= true then
+                        attackCheckedUnit[unit] = true
+                        if self.operator:canTransAttack(unit) then
+                            local w, h = unit:getAssistSize()
+                            ---@type Grid[]
+                            local assistGrids = {}
+                            for j = row + 1, row + h do
+                                for k = line, line - 1 + w do
+                                    local assistGrid = self.map:getGridByRowAndLine(k, j)
+                                    table.insert(assistGrids, assistGrid)
+                                end
+                            end
+                            self:checkAssistAttackGrids(assistGrids)
+                        end
+                    end
+                end
             end
             state = MoveState.CHECK_ROW
         elseif state == MoveState.CHECK_ROW then
@@ -161,6 +179,27 @@ function Side:checkMoveResult(movedUint)
         elseif state == MoveState.SWAP then
             state = MoveState.NORMAL
         end
+    end
+end
+
+---checkAssistAttackGrids
+---@param grids Grid[]
+function Side:checkAssistAttackGrids(grids)
+    local color
+    for _, grid in ipairs(grids) do
+        local unit = grid:getUnit()
+        if unit == nil then
+            return false
+        end
+        if self.operator:canAssistTrans(unit) then
+            return false
+        end
+        if color == nil then
+            color = unit:getColor()
+        elseif color ~= unit:getColor() then
+            return false
+        end
+        return true
     end
 end
 
